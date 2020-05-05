@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS 
 from flask_heroku import Heroku 
-from environs import Env 
+from environs import Env
 import os 
 
 app = Flask(__name__)
@@ -18,10 +18,12 @@ DATABASE_URL = env("DATABASE_URL")
 basedir = os.path.abspath(os.path.dirname(__file__))
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.sqlite')
 app.config["SQLALCHEMY_DATABASE_URL"] = DATABASE_URL
+
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 class Blog(db.Model):
+    __tablename__ = "blog"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100),unique=False)
     content = db.Column(db.Text, nullable=False)
@@ -41,6 +43,7 @@ blog_schema = BlogSchema()
 blogs_schema = BlogSchema(many=True)
 
 class Admin(db.Model):
+    __tablename__ = "admin"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
