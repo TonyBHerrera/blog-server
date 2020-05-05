@@ -42,7 +42,7 @@ class Admin(db.Model):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = username 
+        self.password = password 
 
 class AdminSchema(ma.Schema):
     class Meta:
@@ -52,7 +52,51 @@ admin_schema = AdminSchema()
 admin_schemas = AdminSchema(many=True)
 
 
+@app.route ("/", methods=["GET"])
+def home():
+    return "<h1> Blog API </h1>"
 
+# GET 
+@app.route("/blogs", methods=["GET"])
+def get_blogs():
+    all_blogs = Blog.query.all()
+    result = blogs_schema.dump(all_blogs)
+    return jsonify(result)
 
+@app.route("/admins", methods=["GET"])
+def get_admins():
+    all_admins = Admin.query.all()
+    result = admin_schemas.dump(all_admins)
+    return jsonify(result)
+
+# POST 
+@app.route("/add-blog", methods=["POST"])
+def add_blog():
+    title = request.json["title"]
+    content = request.json["content"]
+    image_url = request.json["image_url"]
+
+    new_blog = Blog(title, content, image_url)
+
+    db.session.add(new_blog)
+    db.session.commit()
+
+    blog = Blog.query.get(new_blog.id)
+    return blog_schema.jsonify(blog)
+
+@app.route("/add-admin", methods=["POST"])
+def add_admin():
+    username = request.json["username"]
+    password = request.json["password"]
+    
+
+    new_admin = Admin(username, password)
+
+    db.session.add(new_admin)
+    db.session.commit()
+
+    admin = Admin.query.get(new_admin.id)
+    return admin_schema.jsonify(admin)
+ 
 if __name__ == '__main__':
     app.run(debug=True)
