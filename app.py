@@ -40,6 +40,10 @@ class Admin(db.Model):
     username = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
+    def __init__(self, username, password):
+        self.username = username
+        self.password = username 
+
 class AdminSchema(ma.Schema):
     class Meta:
         fields = ('username', 'password')   
