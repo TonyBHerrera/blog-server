@@ -56,12 +56,19 @@ admin_schemas = AdminSchema(many=True)
 def home():
     return "<h1> Blog API </h1>"
 
-# GET 
+# GET----------------------------------
 @app.route("/blogs", methods=["GET"])
 def get_blogs():
     all_blogs = Blog.query.all()
     result = blogs_schema.dump(all_blogs)
     return jsonify(result)
+
+@app.route("/blog/<id>", methods=["GET"])
+def get_blog(id):
+    blog = Blog.query.get(id)
+    
+    result = blog_schema.dump(blog)
+    return jsonify(result)   
 
 @app.route("/admins", methods=["GET"])
 def get_admins():
@@ -69,7 +76,14 @@ def get_admins():
     result = admin_schemas.dump(all_admins)
     return jsonify(result)
 
-# POST 
+@app.route("/admin/<id>", methods=["GET"])
+def get_admin(id):
+    admin = Admin.query.get(id)
+    
+    result = admin_schema.dump(admin)
+    return jsonify(result) 
+
+# POST ----------------------------------
 @app.route("/add-blog", methods=["POST"])
 def add_blog():
     title = request.json["title"]
@@ -97,6 +111,40 @@ def add_admin():
 
     admin = Admin.query.get(new_admin.id)
     return admin_schema.jsonify(admin)
- 
+
+# PUT AND PATCH ROUTES------------------------------
+@app.route("/blog/<id>", methods=["PUT"])
+def blog_update(id):
+    blog = Blog.query.get(id)
+    title = request.json["title"]
+    content = request.json["content"]
+    image_url = request.json["image_url"]
+
+    blog.title = title
+    blog.content = content
+    blog.image_url = image_url
+
+    db.session.commit()
+    return blog_schema.jsonify(blog)
+
+# DELETE---------------------------------------------
+@app.route("/blog/<id>", methods=["DELETE"])
+def delete_blog(id):
+    blog = Blog.query.get(id)
+    db.session.delete(blog)
+    db.session.commit()
+
+    return jsonify("SHE GONE BLOG!")
+
+@app.route("/admin/<id>", methods=["DELETE"])
+def delete_admin(id):
+    admin = Admin.query.get(id)
+    db.session.delete(admin)
+    db.session.commit()
+
+    return jsonify("SHE GONE ADMIN!")    
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
