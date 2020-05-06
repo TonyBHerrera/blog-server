@@ -42,6 +42,7 @@ class BlogSchema(ma.Schema):
 blog_schema = BlogSchema()
 blogs_schema = BlogSchema(many=True)
 
+
 class Admin(db.Model):
     __tablename__ = "admin"
     id = db.Column(db.Integer, primary_key=True)
