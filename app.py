@@ -122,7 +122,7 @@ def add_admin():
     return admin_schema.jsonify(admin)
 
 # PUT AND PATCH ROUTES------------------------------
-@app.route("/blog/<id>", methods=["PUT"])
+@app.route("/blog/<id>", methods=["PATCH"])
 def blog_update(id):
     blog = Blog.query.get(id)
     title = request.json["title"]
