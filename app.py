@@ -36,7 +36,7 @@ class Blog(db.Model):
 
 class BlogSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'content', 'image_url')       
+        fields = ('id','title', 'content', 'image_url')
 
 
 blog_schema = BlogSchema()
@@ -55,7 +55,7 @@ class Admin(db.Model):
 
 class AdminSchema(ma.Schema):
     class Meta:
-        fields = ('username', 'password')   
+        fields = ('id','username', 'password')   
 
 admin_schema = AdminSchema()
 admin_schemas = AdminSchema(many=True)
